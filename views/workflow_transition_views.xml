@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="workflow_transition_tree_view" model="ir.ui.view">
+            <field name="name">workflow.transition.tree</field>
+            <field name="model">workflow.transition</field>
+            <field name="arch" type="xml">
+                <list string="Workflow Transition" create="0" edit="0">
+                    <field name="name"/>
+                    <field name="workflow_config_id"/>
+                    <field name="model" column_invisible="1"/>
+                    <field name="model_id"/>
+                    <field name="transition_type"/>
+                    <field name="act_from_id"/>
+                    <field name="act_to_id"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="workflow_transition_form_view" model="ir.ui.view">
+            <field name="name">workflow.transition.form</field>
+            <field name="model">workflow.transition</field>
+            <field name="arch" type="xml">
+                <form string="Workflow Transition" create="0" edit="1">
+                    <sheet>
+                        <field name="list_stage_ids" widget="many2many_tags" invisible="1"/>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="workflow_config_id"/>
+                                <field name="model" invisible="1"/>
+                                <field name="model_id"/>
+                            </group>
+                            <group>
+                                <field name="act_from_id" domain="[('id', 'in', list_stage_ids)]" readonly="1"/>
+                                <field name="act_to_id" domain="[('id', 'in', list_stage_ids)]" readonly="1"/>
+                                <field name="mail_template_id"
+                                       options="{'no_quick_open': True, 'no_create': True}"/>
+                            </group>
+                            <group>
+                                <field name="review_type"/>
+                            </group>
+                            <field name="domain" widget="domain" options="{'model': 'model'}"
+                                    invisible="review_type != 'domain'"/>
+                        </group>
+                        <notebook>
+                            <page name="definition_code" string="Definition Code" invisible="review_type != 'code'">
+                                <field name="definition_code" widget="code"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="workflow_transition_view_action" model="ir.actions.act_window">
+            <field name="name">Workflow Transition</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">workflow.transition</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                </p>
+            </field>
+        </record>
+
+<!--        <menuitem id="workflow_transition_menu" name="Workflow Transition" parent="workflow_configuration_categ"-->
+<!--                  action="workflow_transition_view_action" sequence="1"/>-->
+
+
+    </data>
+</odoo>

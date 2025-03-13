@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="tier_validation_buttons">
+        <div>
+            <widget name="tier_validation_buttons" widget="tier_validation_buttons" invisible="not id"/>
+        </div>
+    </template>
+</odoo>

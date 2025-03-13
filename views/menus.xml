@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="workflow_diagram_view_action" model="ir.actions.client">
+        <field name="name">Workflow</field>
+        <field name="tag">workflow_diagram_view</field>
+    </record>
+
+    <menuitem id="workflow_diagram_root_menu"
+        name="Workflow"
+        web_icon="workflow_diagram,static/description/icon.png"
+        sequence="10"/>
+
+    <!-- <menuitem id="workflow_diagram_view_menu"
+        name="Diagram"
+        action="workflow_diagram_view_action"
+        parent="workflow_diagram.workflow_diagram_root_menu"
+        sequence="1"/> -->
+
+    <menuitem id="workflow_configuration_categ" name="Configuration" parent="workflow_diagram.workflow_diagram_root_menu" sequence="10" groups="base.group_system"/>
+
+    <menuitem id="workflow_config_menu" name="Workflow" parent="workflow_diagram.workflow_diagram_root_menu"
+            action="workflow_diagram.workflow_config_view_action" sequence="2"/>
+    
+    <menuitem id="approve_history_menu" name="Approval Record" parent="workflow_diagram.workflow_diagram_root_menu"
+            action="workflow_diagram.workflow_record_action" sequence="1"/>
+</odoo>

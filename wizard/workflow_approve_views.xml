@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="workflow_approve_form_view" model="ir.ui.view">
+            <field name="name">workflow.approve.form</field>
+            <field name="model">workflow.approve</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group string="Are you sure confirm ?">
+                        <field name="employee_ids" widget="many2many_tags" readoly="1" force_save="1"/>
+                        <field name="note" required="context.get('is_required_workflow')"/>
+                        <field name="res_model" invisible="1"/>
+                        <field name="mail_template_id" invisible="1"/>
+                        <field name="transition_id" invisible="1"/>
+                    </group>
+                    <footer class="oe_edit_only">
+                        <button name="action_confirm" string="Confirm" type="object" class="oe_highlight"/>
+                        <button string="Cancel" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="workflow_approve_action">
+            <field name="name">Workflow Approve</field>
+            <field name="res_model">workflow.approve</field>
+            <field name="view_mode">form</field>
+        </record>
+
+        <record id="workflow_approve_request_view" model="ir.ui.view">
+            <field name="name">workflow.approve.request</field>
+            <field name="model">workflow.approve</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group string="Are you sure Request to Skip?">
+                            <field name="employee_id" required="1"/>
+                            <field name="res_model" invisible="1"/>
+                            <field name="mail_template_id" invisible="1"/>
+                            <field name="transition_id" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="note"/>
+                        </group>
+                    </group>
+                    <footer class="oe_edit_only">
+                        <button name="action_request" string="Confirm" type="object" class="oe_highlight"/>
+                        <button string="Cancel" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

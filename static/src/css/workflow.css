@@ -1,0 +1,195 @@
+div[data-group="artifact"],
+div[data-group="collaboration"],
+div[data-group="data-store"],
+div[data-group="data-object"],
+div[data-group="tools"] {
+    display: none !important;
+}
+
+.timeline-item .timeline-box .out-circle {
+    width: 20px;
+    height: 20px;
+    background: #39c1e0;
+    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.4);
+    border-radius: 50%;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.long-line {
+    height: 3px;
+    background: rgba(14, 116, 218, 0.2);
+    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.3);
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: revert;
+    justify-content: space-around;
+}
+
+.long-line .sub-item-box .sub-line-box .children-box {
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex
+;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgba(14, 116, 218, 0.3);
+    white-space: break-spaces;
+    text-align: left;
+    padding: 5px;
+}
+
+.long-line .top-children-box {
+    margin-top: -90px;
+    background-color: #e2e2e2;
+    border-radius: 5px;
+    text-align: left;
+}
+
+.long-line .sub-item-box {
+    margin-top: -20px;
+    position: relative;
+}
+
+.long-line .sub-item-box .sub-line-box {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex
+;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.long-line .sub-item-box .sub-line-box .children-line-box {
+    width: 0px;
+    border-left: 1px solid rgba(14, 116, 218, 0.3);
+}
+.long-line .top-line {
+    height: 65px;
+}
+
+.long-line .sub-item-box .sub-line-box .children-box {
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex
+;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgba(14, 116, 218, 0.3);
+    white-space: break-spaces;
+    text-align: left;
+    padding: 5px;
+}
+.long-line .top-children-box {
+    margin-top: -90px;
+    background-color: #e2e2e2;
+    border-radius: 5px;
+    text-align: left;
+}
+
+ul.timeline-wrapper {
+    list-style: none;
+    margin: 0;
+    padding: 150px 20px;
+    white-space: nowrap;
+    overflow-x: auto;
+}
+
+.timeline-item {
+    position: relative;
+    display: inline-block;
+}
+
+.long-line .top-line-box {
+    margin-top: -100px;
+    height: 60px;
+}
+
+.long-line .sub-item-box .sub-line-box {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex
+;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.timeline-item .timeline-box .out-circle .timeline-date {
+    color: #333;
+    margin-top: 55px;
+}
+
+.timeline-item .timeline-box {
+    text-align: center;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex
+;
+    align-items: center;
+}
+
+.bjs-powered-by {
+    display: none !important;
+}
+
+.long-line .sub-item-box .sub-line-box {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex
+;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.long-line .bottom-line-box {
+    margin-top: 5px;
+    height: 150px;
+}
+
+.long-line .sub-item-box .sub-line-box .children-line-box {
+    width: 0px;
+    border-left: 1px solid rgba(14, 116, 218, 0.3);
+}
+.long-line .bottom-line {
+    height: 75px;
+}
+
+.long-line .sub-item-box .sub-line-box .children-box {
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex
+;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgba(14, 116, 218, 0.3);
+    white-space: break-spaces;
+    text-align: left;
+    padding: 5px;
+}
+.long-line .bottom-children-box {
+    background-color: #e2e2e2;
+    border-radius: 5px;
+    text-align: left;
+}

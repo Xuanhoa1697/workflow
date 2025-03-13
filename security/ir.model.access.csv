@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_workflow_config,workflow.config,model_workflow_config,,1,1,1,1
+access_name_stage,name.stage,model_name_stage,,1,1,1,1
+access_workflow_config_state,workflow.config.state,model_workflow_config_state,,1,1,1,1
+access_workflow_transition,workflow.transition,model_workflow_transition,,1,1,1,1
+access_approve_history,approve.history,model_approve_history,,1,1,1,1
+access_workflow_record,workflow.record,model_workflow_record,,1,1,1,1

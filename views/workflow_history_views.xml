@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="approve_history_form_view" model="ir.ui.view">
+            <field name="name">approve.history.form</field>
+            <field name="model">approve.history</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="is_required_comment" invisible="1"/>
+                        <field name="is_required_email" invisible="1"/>
+                        <group>
+                            <field name="workflow_id" readonly="1" force_save="1" invisible="context.get('is_transfer') or context.get('is_additional_signatories')"/>
+                            <field name="user_id" readonly="1" options="{'no_open': 1}" invisible="context.get('is_transfer') or context.get('is_additional_signatories')"/>
+                            <field name="user_ids" widget="many2many_tags" invisible="context.get('is_transfer') or context.get('is_additional_signatories')"/>
+                            <field name="transfer_user_ids" invisible="not context.get('is_transfer')" required="context.get('is_transfer')" widget="many2many_tags"/>
+                            <field name="additional_signatories_user_ids" invisible="not context.get('is_additional_signatories')" 
+                                widget="many2many_tags"
+                                required="context.get('is_additional_signatories')"/>
+                        </group>
+                        <group>
+                            <field name="res_model" invisible="1"/>
+                            <field name="res_id" invisible="1"/>
+                            <field name="state" force_save="1" readonly="1" invisible="1"/>
+                            <field name="mail_template_id" required="is_required_email" options="{'no_open': 1}" 
+                                invisible="context.get('is_transfer') or context.get('is_additional_signatories')"/>
+                            <field name="approve_date" readonly="1" invisible="1"/>
+                            <label for="state_id" string="State" invisible="context.get('is_transfer') or context.get('is_additional_signatories')"/>
+                            <div class="o_row" invisible="context.get('is_transfer') or context.get('is_additional_signatories')">
+                                <field name="state_id" options="{'no_open': 1}"
+                                    readonly="1" required="1" force_save="1" widget="badge" decoration-success="1"/>
+                                <label for="state_to_id" string="➡"/>
+                                <field name="state_to_id" 
+                                    options="{'no_open': 1}" required="1" readonly="1" force_save="1" widget="badge" decoration-info="1" />
+                            </div>
+                        </group>
+                        <field name="comment" placeholder="Comment" 
+                            required="is_required_comment and not context.get('is_additional_signatories') and context.get('is_transfer')" 
+                            invisible="context.get('is_transfer') or context.get('is_additional_signatories')"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="approve_history_list_view" model="ir.ui.view">
+            <field name="name">approve.history.tree</field>
+            <field name="model">approve.history</field>
+            <field name="arch" type="xml">
+                <list create="0">
+                    <field name="ref_id"/>
+                    <field name="user_id"/>
+                    <field name="workflow_id"/>
+                    <field name="user_id" />
+                    <field name="approve_date" />
+                    <field name="comment" />
+                    <field name="state" widget="badge"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="approve_history_search_view" model="ir.ui.view">
+            <field name="name">approve.history.search</field>
+            <field name="model">approve.history</field>
+            <field name="arch" type="xml">
+                <search string="Search Approveal">
+                    <group expand="0" string="Group By">
+                        <filter string="Approval Name" name="group_ref_id" context="{'group_by': 'ref_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="approve_history_action" model="ir.actions.act_window">
+            <field name="name">Approval Record</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">approve.history</field>
+            <field name="context">{'group_by':['ref_id']}</field>
+            <field name="view_mode">list</field>
+        </record>
+    </data>
+</odoo>

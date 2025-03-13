@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="workflow_config_search_view" model="ir.ui.view">
+            <field name="name">workflow.config.search.view</field>
+            <field name="model">workflow.config</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="model_id"/>
+                    <field name="model"/>
+                    <group expand="1" string="Group By">
+                        <filter name="group_model" string="Form" domain="[]" context="{'group_by': 'model_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="workflow_config_tree_view" model="ir.ui.view">
+            <field name="name">workflow.config.tree</field>
+            <field name="model">workflow.config</field>
+            <field name="arch" type="xml">
+                <list string="Workflow Config" expand="1">
+                    <field name="name"/>
+                    <field name="model_id"/>
+                    <field name="model"/>
+                    <field name="state" widget="badge" 
+                        decoration-info="state == 'draft'" 
+                        decoration-danger="state == 'obsolete'" 
+                        decoration-success="state == 'in_use'"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="workflow_config_form_view" model="ir.ui.view">
+            <field name="name">workflow.config.form</field>
+            <field name="model">workflow.config</field>
+            <field name="arch" type="xml">
+                <form string="Workflow">
+                    <header>
+                        <button name="action_config_workflow" type="object" class="btn btn-primary oe_edit_only" string="Design Workflow" invisible="state != 'draft'"/>
+                        <button name="action_config_workflow" type="object" class="btn btn-primary oe_edit_only" string="View Workflow" invisible="state == 'draft'"/>
+                        <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" required="1" readonly="state != 'draft'"/>
+                                <field name="domain" widget="domain" options="{'model': 'model'}" readonly="state != 'draft'"/>
+                            </group>
+                            <group>
+                                <field name="model_id" required="1" readonly="state != 'draft'"/>
+                                <field name="model" readonly="1" force_save="1"/>
+                                <field name="approval_submitter_ids" widget="many2many_tags"/>
+                                <field name="write_date"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Approval Settings">
+                                <group string="Require Reasons">
+                                    <group>
+                                        <field name="submit_reason" readonly="state != 'draft'"/>
+                                        <field name="request_email" readonly="state != 'draft'"/>
+                                    </group>
+                                    <group>
+                                        <field name="hold_buttons" readonly="state != 'draft'"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Approval Workflow">
+                                <field name="workflow_config_state_ids">
+                                    <list create="0" edit="0" editable="bottom" delete="0" default_order="sequence asc">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="model_id" column_invisible="1"/>
+                                        <field name="name_stage_id" optional="hide" domain="[('model_id', '=', model_id)]"/>
+                                        <field name="name"/>
+                                        <!-- <field name="job_id"/>
+                                        <field name="department_id"/> -->
+                                        <field name="start_end_cancel_workflow"/>
+                                        <!-- <button name="action_config_workflow" class="btn btn-primary oe_edit_only"
+                                                type="object" string="Configuration"/> -->
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+
+        <record id="workflow_config_state_form_view" model="ir.ui.view">
+            <field name="name">workflow.config.state.form</field>
+            <field name="model">workflow.config.state</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="start_end_cancel_workflow"/>
+                                <field name="bpmn_id" readonly="1" force_save="1"/>
+                                <field name="workflow_config_id" readonly="1" force_save="1" invisible="1"/>
+                                <field name="model_id" invisible="1"/>
+                                <!-- <field name="color" widget="color"/> -->
+                            </group>
+                            <group>
+                                <field name="sequence" required="1"/>
+                                <field name="review_type" invisible="start_end_cancel_workflow"/>
+                                <field name="reviewer_id" invisible="review_type != 'individual'" widget="many2many_tags"/>
+                                <field name="reviewer_group_id" invisible="review_type != 'group'" widget="many2many_tags"/>
+                            </group>
+                        </group>
+                        <group string="Readonly Fields">
+                            <field name="fields_ids" widget="many2many_tags" domain="[('model_id', '=', model_id)]"/>
+                        </group>
+                        <group string="Transfer/Additional Signatories">
+                            <group>
+                                <field name="transfer_to_others" widget="boolean_toggle"/>
+                                <field name="to_draft" widget="boolean_toggle"/>
+                            </group>
+                            <group>
+                                <field name="additional_signatories" widget="boolean_toggle"/>
+                            </group>
+                        </group>
+                        <group string="Callback Button">
+                            <group>
+                                <field name="before_callback_button"/>
+                            </group>
+                            <group>
+                                <field name="after_callback_button"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="definition_code" string="Definition Code" invisible="review_type != 'code'">
+                                <field name="definition_code" widget="code"/>
+                            </page>
+                            <page name="out_transitions" string="Out Transitions">
+                                <field name="in_transitions" invisible="1"/>
+                                <field name="out_transitions" nolabel="1">
+                                    <list string="Outgoing Transitions" create="0" edit="0" delete="0" editable="bottom">
+                                        <field name="act_to_id"/>
+                                        <field name="model" column_invisible="1"/>
+                                        <field name="model_id" column_invisible="1"/>
+                                        <field name="review_type" column_invisible="1"/>
+                                        <field name="transition_type"/>
+                                        <field name="domain" widget="domain" options="{'model': 'model'}"/>
+                                        <field name="definition_code" widget="code"/>
+                                    </list>
+                                    <form>
+                                        <field name="list_stage_ids" widget="many2many_tags" invisible="1"/>
+                                        <group>
+                                            <group>
+                                                <field name="act_from_id" readonly="1" force_save="1"/>
+                                                <field name="model" invisible="1"/>
+                                                <field name="model_id" invisible="1"/>
+                                            </group>
+                                            <group>
+                                                <field name="transition_type" required="1"/>
+                                                <field name="act_to_id"
+                                                    domain="[('id', 'in', list_stage_ids)]"/>
+                                                <field name="mail_template_id"
+                                                    options="{'no_quick_open': True, 'no_create': True}"/>
+                                                <field name="workflow_config_id" invisible="1"/>
+                                            </group>
+                                        </group>
+                                        <group>
+                                            <field name="is_conditional"/>
+                                        </group>
+                                        <field name="domain" widget="domain" options="{'model': 'model'}"
+                                            invisible="not is_conditional"/>
+                                    </form>
+                                </field>
+                            </page>
+                        </notebook>
+                        
+                        
+                        <!-- <label string="Outgoing Transitions" for="out_transitions"/>
+                            <field name="in_transitions" nolabel="1">
+                                <list string="Incoming Transitions">
+                                    <field name="act_from_id"/>
+                                    <field name="model" column_invisible="1"/>
+                                    <field name="model_id" column_invisible="1"/>
+                                    <field name="transition_type"/>
+                                    <field name="domain" widget="domain" options="{'model': 'model'}"/>
+                                </list>
+                                <form>
+                                    <field name="list_stage_ids" widget="many2many_tags" invisible="1"/>
+                                    <group>
+                                        <group>
+                                            <field name="act_from_id"
+                                                domain="[('id', 'in', list_stage_ids)]"/>
+                                            <field name="model" invisible="1"/>
+                                            <field name="model_id" invisible="1"/>
+                                        </group>
+                                        <group>
+                                            <field name="transition_type" required="1"/>
+                                            <field name="act_to_id" readonly="1" force_save="1"/>
+                                            <field name="mail_template_id"
+                                                options="{'no_quick_open': True, 'no_create': True}"/>
+                                            <field name="workflow_config_id" invisible="1"/>
+                                        </group>
+                                    </group>
+                                    <group>
+                                        <field name="is_conditional"/>
+                                    </group>
+                                    <field name="domain" widget="domain" options="{'model': 'model'}"
+                                        invisible="not is_conditional"/>
+                                </form>
+                            </field>
+                        <field name="out_transitions" nolabel="1">
+                            <list string="Outgoing Transitions">
+                                <field name="act_to_id"/>
+                                <field name="model" column_invisible="1"/>
+                                <field name="model_id" column_invisible="1"/>
+                                <field name="transition_type"/>
+                                <field name="domain" widget="domain" options="{'model': 'model'}"/>
+                            </list>
+                            <form>
+                                <field name="list_stage_ids" widget="many2many_tags" invisible="1"/>
+                                <group>
+                                    <group>
+                                        <field name="act_from_id" readonly="1" force_save="1"/>
+                                        <field name="model" invisible="1"/>
+                                        <field name="model_id" invisible="1"/>
+                                    </group>
+                                    <group>
+                                        <field name="transition_type" required="1"/>
+                                        <field name="act_to_id"
+                                               domain="[('id', 'in', list_stage_ids)]"/>
+                                        <field name="mail_template_id"
+                                               options="{'no_quick_open': True, 'no_create': True}"/>
+                                        <field name="workflow_config_id" invisible="1"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <field name="is_conditional"/>
+                                </group>
+                                <field name="domain" widget="domain" options="{'model': 'model'}"
+                                       invisible="not is_conditional"/>
+                            </form>
+                        </field> -->
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="workflow_config_state_view_action" model="ir.actions.act_window">
+            <field name="name">Workflow Config State</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">workflow.config.state</field>
+            <field name="view_mode">form</field>
+        </record>
+
+
+        <record id="workflow_config_view_action" model="ir.actions.act_window">
+            <field name="name">Workflow</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">workflow.config</field>
+            <field name="view_mode">list,form</field>
+            <field name="context">{'search_default_group_model': 1}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Add a new Workflow Config
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

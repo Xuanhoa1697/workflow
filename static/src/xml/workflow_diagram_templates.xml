@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="workflow_diagram.workflow_diagram_view" owl="1">
+        <div class="o_control_panel_breadcrumbs d-flex align-items-center gap-1 order-0 px-3 py-2 pb-3"
+            style="height: 60px; border-bottom: var(--ControlPanel-border-bottom, 1px solid #d8dadd);">
+            <div class="o_control_panel_main_buttons d-flex gap-1 d-empty-none d-print-none">
+                <div class="d-none d-xl-inline-flex gap-1">
+                    <button type="button" class="btn btn-outline-primary o_form_button_create" t-if="this.is_edit"
+                        data-hotkey="c" t-on-click="saveDiagram">Save</button>
+                    <button type="button" class="btn btn-outline-primary o_form_button_create" t-if="!this.is_edit"
+                        data-hotkey="c" t-on-click="renderView">Refresh</button>
+                    <button type="button" t-on-click="backCurrent" class="btn btn-secondary">Cancel</button>
+                </div>
+            </div>
+            <div class="o_breadcrumb d-flex flex-row flex-md-column align-self-stretch justify-content-between min-w-0">
+                <ol class="breadcrumb flex-nowrap text-nowrap small lh-sm">
+                    <li class="breadcrumb-item d-inline-flex min-w-0 o_back_button" data-hotkey="b"><a href="#"
+                            class="fw-bold text-truncate" data-tooltip="Back to &quot;Workflow Config&quot;"
+                            t-on-click="backCurrent" title="">Workflow</a></li>
+                </ol>
+                <div class="d-flex gap-1 text-truncate">
+                    <div class="o_last_breadcrumb_item active d-flex gap-2 align-items-center min-w-0 lh-sm"><span
+                            class="min-w-0 text-truncate">
+                            <t t-esc="this.active_name" />
+                        </span></div>
+                </div>
+            </div>
+        </div>
+        <div style="height: calc(100% - 55px);" class="p-3 pt-2">
+            <div id="budget_general_report_view" class="h-100 w-100" />
+            <div id="properties"></div>
+        </div>
+    </t>
+
+    <t t-name="workflow_diagram.workflow_diagram_button_view" owl="1">
+        <div class="d-flex workflow_diagram_button_view">
+            <t t-if="is_apply">
+                <button class="btn btn-secondary me-1" t-on-click="() => env.applyDiagram('to_start')" t-if="isStart and !isEnd">
+                    <t t-esc="nameWfl" />
+                </button>
+                <button class="btn btn-secondary me-1" t-on-click="() => env.applyDiagram('with_draft')" t-if="withDraft and !isEnd">
+                    Draft
+                </button>
+                
+                <button class="btn btn-primary me-1" t-on-click="() => env.applyDiagram('approve')" t-if="isProgress and !isEnd and !isOption">
+                    Approve
+                </button>
+
+                <div class="btn-group me-1" t-if="isProgress and !isEnd and isOption">
+                    <button class="btn btn-primary" t-on-click="() => env.applyDiagram('approve')">
+                        Approve
+                    </button>
+                    <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" 
+                        id="dropdownMenuReference" data-bs-toggle="dropdown" 
+                        aria-expanded="false" data-bs-reference="parent"
+                        t-if="isTransferToOthers or isAdditionalSignatories">
+                        <span class="visually-hidden">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuReference">
+                        <li t-if="isTransferToOthers"><a t-on-click="() => env.applyTransferDiagram('is_transfer')" class="dropdown-item" href="#">Transfer To Others</a></li>
+                        <li t-if="isAdditionalSignatories"><a t-on-click="() => env.applyTransferDiagram('is_additional_signatories')" class="dropdown-item" href="#"> Additional Signatories</a></li>
+                    </ul>
+                </div>
+                
+                <button class="btn btn-secondary me-1" t-on-click="() => env.applyDiagram('cancel')" t-if="isProgress and withCancel and !isEnd">
+                    Cancel
+                </button>
+            </t>
+            <button class="btn btn-secondary" t-on-click="() => env.diagramPreview()">
+                <i class="fa fa-indent" />
+            </button>
+        </div>
+    </t>
+
+    <t t-name="workflow_diagram.workflow_diagram_preview">
+        <div class="d-flex" style="min-height: 200px;">
+            <div class="o_view_nocontent" t-if="this.history_ids.length == 0">
+                <div class="o_nocontent_help">
+                    <p class="o_view_nocontent_smiling_face">
+                        No approve history
+                    </p>
+                </div>
+            </div>
+            <ul class="timeline-wrapper w-100" t-if="this.history_ids.length > 0">
+                <t t-foreach="this.history_ids" t-as="stateWfl" t-key="stateWfl.id">
+                    <li class="timeline-item" t-if="!stateWfl.isLastApprove">
+                        <div class="timeline-box">
+                            <t t-set="cssClass" t-value="'background: rgb(11, 189, 135);;'"/>
+                            <t t-set="titleApprove" t-value="'Approved'"/>
+                            <t t-set="titleApprove" t-if="stateWfl.state == 'cancel'" t-value="'Cancel'"/>
+                            <t t-set="cssClass" t-if="stateWfl.state == 'cancel'" t-value="'background: rgb(204, 0, 51);'"/>
+
+                            <div class="out-circle" t-att-title="titleApprove" t-att-style="cssClass">
+                                <div class="in-circle"/>
+                                <div class="timeline-date">
+                                    <div placement="bottom" trigger="hover" width="200">
+                                        <div>
+                                            <img t-attf-src="/web/image/res.users/{{stateWfl.user_id[0]}}/avatar_128" class="button-icon"
+                                                style="width: 20px; height: 20px;"/>  <t t-esc="stateWfl.user_id[1]"
+                                                t-att-title="user_id[1]"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="long-line" style="min-width: 200px;">
+                                <div class="sub-item-box"><span t-esc="stateWfl.approve_date"/>
+                                    <div class="sub-line-box top-line-box">
+                                        <div class="children-line-box top-line"/>
+                                        <div class="children-box top-children-box" t-esc="stateWfl.comment or 'No Comment'"/>
+                                    </div>
+                                    <div class="sub-line-box bottom-line-box"  t-if="stateWfl.transfer_user_ids.length > 0">
+                                        <div class="children-line-box bottom-line"></div>
+                                        <div class="children-box bottom-children-box">
+                                            <span >Transfer To: </span>
+                                            <t t-foreach="stateWfl.transfer_user_ids" t-as="user" t-key="user[0]">
+                                                <img t-attf-src="/web/image/res.users/{{user[0]}}/avatar_128" class="button-icon me-1"
+                                                    t-att-title="user[1]"
+                                                    style="width: 20px; height: 20px;"/>
+                                            </t>
+                                        </div>
+                                    </div>
+
+                                    <div class="sub-line-box bottom-line-box"  t-if="stateWfl.additional_signatories_user_ids.length > 0">
+                                        <div class="children-line-box bottom-line"></div>
+                                        <div class="children-box bottom-children-box">
+                                            <span >Additional Signatories To: </span>
+                                            <t t-foreach="stateWfl.additional_signatories_user_ids" t-as="user" t-key="user[0]">
+                                                <img t-attf-src="/web/image/res.users/{{user[0]}}/avatar_128" class="button-icon me-1"
+                                                    t-att-title="user[1]"
+                                                    style="width: 20px; height: 20px;"/>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="timeline-item" t-if="stateWfl.isLastApprove">
+                        <div class="timeline-box">
+                            <t t-set="cssClass" t-value="'background: #e1cb00;'"/>
+                            <t t-set="titleApprove" t-value="'Wait to Approve'"/>
+                            <t t-set="titleApprove" t-if="stateWfl.state == 'approve'" t-value="'Approved'"/>
+                            <t t-set="cssClass" t-if="stateWfl.state == 'cancel'" t-value="'background: rgb(204, 0, 51);'"/>
+                            <t t-set="cssClass" t-if="stateWfl.state == 'approve'" t-value="'background: rgb(11, 189, 135);'"/>
+
+                            <div class="out-circle" t-att-title="titleApprove" style="background: #e1cb00;'"
+                                t-att-style="cssClass">
+                                <div class="in-circle"/>
+                                <div class="timeline-date">
+                                    <div placement="bottom" trigger="hover" width="200">
+                                        <div t-if="stateWfl.state != 'cancel'">
+                                            <t t-foreach="stateWfl.user_ids" t-as="user" t-key="user">
+                                                <img t-attf-src="/web/image/res.users/{{user[0]}}/avatar_128" class="button-icon me-1"
+                                                    style="width: 20px; height: 20px;"
+                                                    t-att-title="user[1]"/>
+                                            </t>
+                                        </div>
+                                        <div t-if="stateWfl.state == 'cancel' and stateWfl.user_id">
+                                            <img t-attf-src="/web/image/res.users/{{stateWfl.user_id[0]}}/avatar_128" class="button-icon me-1"
+                                                style="width: 20px; height: 20px;"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </t>
+            </ul>
+        </div>
+    </t>
+
+</templates>
