@@ -35,6 +35,6 @@
     'installable': True,
     'auto_install': False,
     'images': [
-        'static/description/banner.jpg'
+        'static/description/banner1.jpg'
     ],
 }
