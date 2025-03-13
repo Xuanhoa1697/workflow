@@ -37,7 +37,7 @@ WorkflowPreview.props = {
   action: Object,
   actionId: { type: Number, optional: true },
   fcy: { type: String, optional: true },
-  updateActionState: { type: Function, optional: true },
+//   updateActionState: { type: Function, optional: true },
 };
 WorkflowPreview.template = "workflow_diagram.workflow_diagram_preview"
 registry.category("actions").add("workflow_diagram_preview", WorkflowPreview);

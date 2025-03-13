@@ -290,8 +290,8 @@ WorkflowDiagramView.props = {
   actionId: { type: Number, optional: true },
   className: String,
   fcy: { type: String, optional: true },
-  updateActionState: { type: Function, optional: true },
-  globalState: { type: Object, optional: true },
+  // updateActionState: { type: Function, optional: true },
+  // globalState: { type: Object, optional: true },
 };
 WorkflowDiagramView.template = "workflow_diagram.workflow_diagram_view"
 registry.category("actions").add("workflow_diagram_view", WorkflowDiagramView);
